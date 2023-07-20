@@ -1,0 +1,37 @@
+version: "3.7"
+
+
+services:
+  inventory:
+    container_name: inventory
+    build: ./backend/inventory
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - .:/home/riyad/Documents/FastApi-WareHouse-Microservices/inventory
+    ports:
+      - 8001:8000
+    #! http://0.0.0.0:8001/
+    
+  payment:
+    container_name: payment
+    build: ./backend/payment
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - .:/home/riyad/Documents/FastApi-WareHouse-Microservices/payment
+    ports:
+      - 8002:8000
+    #! http://0.0.0.0:8002/
+
+  inventory-system:
+    image: node:alpine
+    container_name: inventory-system
+    entrypoint: /bin/sh
+    ports:
+      - 8004:8000
+    working_dir: /inventory-system
+    volumes:
+      - type: bind
+        source: ./
+        target: /inventory-system
+    tty: true
+    #! http://localhost:8004/
