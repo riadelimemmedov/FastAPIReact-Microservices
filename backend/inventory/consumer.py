@@ -32,16 +32,18 @@ while True:
         # None => The count parameter. It specifies the maximum number of messages to read from the stream. In this case, None means that all available messages will be read. => Four parameter
 
         results = redis.xreadgroup(group,key,{key:'>'},None)#Every 1 seconds consume this task
+        print('Results is ', results)
         if results != []:
             for result in results:
                 obj = result[1][0][1]
                 try:
                     product = Product.get(obj['product_id'])
-                    product.quantity = product.quantity - int(obj['quantity']) 
+                    product.quantity = product.quantity - int(obj['quantity'])
                     product.save()
+                    print('Product quantity updated successfully ', product)
                 except Exception as err:
-                    redis.xadd('refund_order',obj,'*')
-        
+                    print('Error updating product')
+                    # redis.xadd('refund_order',obj,'*')
     except Exception as e:
         print(str(e))
     time.sleep(1)

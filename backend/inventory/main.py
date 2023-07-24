@@ -88,8 +88,9 @@ async def update_product(pk:str,body:dict):
 @app.delete('/products/{pk}') 
 async def delete_product(pk:str):
     """Delete product,which we sended pk value"""
+    product = Product.get(pk=pk).name
     Product.delete(pk=pk)
-    return {"success": "Product deleted successfully"}
+    return {"success": f"Deleted {product} successfully"}
 
 
 #!delete_all_blogs          
