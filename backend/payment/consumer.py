@@ -26,13 +26,28 @@ except:
 while True:
     try:
         results = redis.xreadgroup(group, key, {key: '>'}, None)
+        print('Results is  PAYMENTTTT', results)
         if results != []:
-            print('Results payment is ', results)
             for result in results:
                 obj = result[1][0][1]
-                order = Order.get(obj['pk'])
-                order.status = 'refunded' 
-                order.save()
+                try:
+                    print('Result order data is ..... ', obj)
+                except:
+                    print('Error +++++')
     except Exception as err:
         print('Error when refunded order ', str(err))
     time.sleep(1)
+    
+    
+    
+    
+    
+    
+    
+    #     if order.status == 'pending':
+    #         print('Pending order...............')
+    #     order.status = 'completed'
+    #     order.save()
+    # elif order.status == 'refunded':
+    #     pass
+    

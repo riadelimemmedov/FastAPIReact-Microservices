@@ -18,6 +18,8 @@ from datetime import datetime
 import httpx
 import time
 
+import json
+
 
 # create your views here,and run server =>  uvicorn main:app --reload
 app = FastAPI()
@@ -32,6 +34,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Store the background tasks in a global dictionary using a unique identifier
+background_tasks = {}
 
 
 @app.get("/")
@@ -63,11 +68,9 @@ async def get_order(pk:str):
 
 #!create_order
 @app.post('/orders')
-async def create_order(body:Order,background_tasks:BackgroundTasks):
+async def create_order(body:Order,background_tasks:BackgroundTasks,request:Request): 
     """Create a new order"""
     product_data = get_product_data(body.product_id)
-    # print('Product data ', product_data)
-    # print('oBdy attribute is ', body.quantity)
     
     order = Order(
         product_id=body.product_id,
@@ -77,13 +80,26 @@ async def create_order(body:Order,background_tasks:BackgroundTasks):
         quantity = body.quantity,
         status = 'pending'
     )
-    created_order = order.save()
-    if(created_order.pk):
-        # print('WORKEDD')
-        background_tasks.add_task(order_completed,order)
-        # product_data['quantity'] = product_data['quantity']-body.quantity
-        # update_product_data(body.product_id,product_data)
+    print('Order type is ', type(order))
+    if(order.pk):
+        order.save()
+        background_tasks.add_task(order_completed,order.pk)
     return order
+
+
+#!cancel_order
+@app.patch('/orders/cancel/{order_id}')
+async def cancel_order(order_id:str,background_tasks:BackgroundTasks):
+    """Cancel ordered goods"""
+    try:
+        pending_order = Order.get(pk=order_id)
+        if pending_order.status=='pending':#
+            # background_tasks.add_task(order_refunded,pending_order)
+            pending_order.status = 'refunded'
+            pending_order.save()    
+        return pending_order
+    except Exception as err:
+        print('When want to refund order,system encounter some issues please try again')
 
 
 
@@ -116,12 +132,37 @@ def get_product_data(product_id):
     
 
 #?order_completed
-def order_completed(order:Order):
-    time.sleep(5)
-    order.status = 'completed'
-    order.save()
-    redis.xadd("order_completed",order.dict(),'*')
+def order_completed(order_id:str):
+    time.sleep(60)
+    order = Order.get(pk=order_id)
+    print('Order here broo... ', order)
+    print('Order status here  ', order.status)
+    if order.status == 'refunded':
+        print('Your order has been --- REFUNDED ---')        
+    elif order.status == 'pending':
+        # order.save()  
+        print('Your order has been --- COMPLETED ---')
+        order.status = 'completed'
+        order.save()    
+        updated_order = order.dict()
+        deleted_fields = updated_order.pop('created_date')
+        redis.xadd("order_completed",updated_order,'*')
+    
 
+
+# #?order_refunded
+# def order_refunded(pending_order:Order):
+#     pending_order.status='refunded'
+#     pending_order.save()
+    
+#     order = pending_order.dict()
+#     deleted_fields = order.pop('created_date')
+    
+    
+    
+#     print('Deleted field is ', deleted_fields)
+#     print('Updated dict is ', order)
+#     redis.xadd('refund_order',order,'*')
 
 
 
