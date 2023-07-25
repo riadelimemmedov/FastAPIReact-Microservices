@@ -31,6 +31,7 @@ redis = RedisModel().get()
 #!Product
 class Order(JsonModel):
     product_id:str = Field(index=True,full_text_search=True)
+    product_name:str = Field(default="product_name",full_text_search=True)
     slug:str = Field(default=f"order")
     price:float
     fee:float
