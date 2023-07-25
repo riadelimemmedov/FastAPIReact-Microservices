@@ -74,6 +74,7 @@ async def create_order(body:Order,background_tasks:BackgroundTasks,request:Reque
     
     order = Order(
         product_id=body.product_id,
+        product_name=product_data['name'],
         price=(product_data['price']*body.quantity),
         fee = 0.2 * (product_data['price'] * body.quantity),
         total = 1.2 * (product_data['price'] * body.quantity),
@@ -133,7 +134,7 @@ def get_product_data(product_id):
 
 #?order_completed
 def order_completed(order_id:str):
-    time.sleep(60)
+    time.sleep(180)
     order = Order.get(pk=order_id)
     print('Order here broo... ', order)
     print('Order status here  ', order.status)
@@ -157,7 +158,6 @@ def order_completed(order_id:str):
     
 #     order = pending_order.dict()
 #     deleted_fields = order.pop('created_date')
-    
     
     
 #     print('Deleted field is ', deleted_fields)
