@@ -14,6 +14,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 //!Custom Components
 import OrderComponent from '../routes/Order.jsx'
 import ProductCreateComponent from '../routes/ProductCreate.jsx'
+import OrdersListComponent from '../routes/OrdersList.jsx'
 
 
 
@@ -23,7 +24,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Routes>
           <Route exact path="/" element={<App/>}/>
           <Route path="/create" element={<ProductCreateComponent/>}/>
-          <Route path="/order" element={<OrderComponent/>}/>
+          <Route path="/order/:order_id" element={<OrderComponent/>}/>
+          <Route path="/orders/" element={<OrdersListComponent/>}/>
         </Routes>
     </BrowserRouter>
 )
