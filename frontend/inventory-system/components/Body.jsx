@@ -52,7 +52,7 @@ const BodyComponent = () => {
             <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
                 <div className="pt-3 pb-2 mb-3 border-bottom">
                     <Link to={'/create'} className="btn btn-warning btn-sm fw-bold border-2">Add Product</Link> &nbsp;
-                    <Link to={'/order'} className="btn btn-primary btn-sm fw-bold border-2">Order Product</Link>
+                    <Link to={'/orders'} className="btn btn-secondary btn-sm fw-bold border-2">Orders</Link> &nbsp;
                 </div>
                 <hr/>
                 <div className="table-responsive">
@@ -65,6 +65,7 @@ const BodyComponent = () => {
                                 <th scope="col">Quantity</th>
                                 <th scope="col">Created Date</th>
                                 <th scope="col">Delete Product</th>
+                                <th scope="col">Order Product</th>
                             </tr>
                         </thead>
                         <tbody> 
@@ -73,13 +74,16 @@ const BodyComponent = () => {
                                     <tr key={index}>
                                         <td>{product.pk}</td>
                                         <td>{product.name}</td>
-                                        <td>{product.price}</td>
+                                        <td>{parseFloat(product.price * 1.2)}</td>
                                         <td>{product.quantity}</td>
                                         <td>{product.created_date}</td>
                                         <td>
                                             <a href="#" className="btn btn-danger btn-sm" onClick={(e) => deleteProduct(product.pk)}>
                                                 Delete
                                             </a>
+                                        </td>
+                                        <td>
+                                            <Link to={`/order/${product.pk}`} className="btn btn-primary btn-sm fw-bold border-2">Order</Link>
                                         </td>
                                     </tr>
                                 ))
