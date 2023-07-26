@@ -68,7 +68,6 @@ const ProductCreateComponent = () => {
                 .catch((err) => {
                     toast.error('Please try again,occur some error at server')
                     setLoading(false)
-
                 })
                 }, 3000);
         }
