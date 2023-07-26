@@ -15,8 +15,12 @@ import {useNavigate} from 'react-router-dom';
 
 //!Third Party Package
 import { toast,Toaster } from 'react-hot-toast';
+import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 
+
+//!Custom styles
+import '../style/Pagination.css'
 
 
 //*OrdersListComponent
@@ -24,9 +28,17 @@ const OrdersListComponent = () => {
     //state
     const [orders,setOrders] = useState([])
     const [isEmpty,setIsEmpty] = useState(false)
-
     const [loading,setLoading] = useState(false)
 
+    const [currentPage, setCurrentPage] = useState(0);
+
+
+    const [itemOffset, setItemOffset] = useState(0);
+
+    let itemsPerPage = 10
+    const endOffset = itemOffset + itemsPerPage;
+    const currentItems = orders.slice(itemOffset, endOffset)
+    const pageCount = Math.ceil(orders.length / itemsPerPage);
 
 
     //getAllOrders
@@ -55,6 +67,13 @@ const OrdersListComponent = () => {
         console.log('Handled event cancel order event')
     }
 
+
+    // Invoke when user click to request another page.
+    const handlePageClick = (event) => {
+        const newOffset = (event.selected * itemsPerPage) % orders.length;
+        console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
+        setItemOffset(newOffset);
+    };
 
     //useEffect
     useEffect(() => {
@@ -90,14 +109,14 @@ const OrdersListComponent = () => {
 
                         <tbody>
                             {
-                                orders.map((order,index) => (
+                                currentItems.map((order,index) => (
                                     <tr key={index}>
-                                        <td className='fw-bold text-secondary'>{index+1})</td>
+                                        <td className='fw-bold text-secondary'>{currentItems.length == 10  ? index+1 : (orders.length - currentItems.length) + index+1})</td>
                                         <td>{order.pk}</td>
                                         <td>{order.product_name}</td>
                                         <td>{order.price}</td>
-                                        <td>{order.fee}</td>
-                                        <td>{order.total}</td>
+                                        <td>{order.fee.toFixed(2)}</td>
+                                        <td>{order.total.toFixed(2)}</td>
                                         <td>{order.quantity}</td>
                                         <td>{order.created_date}</td>
                                         <td>
@@ -111,7 +130,6 @@ const OrdersListComponent = () => {
                                                 )
                                             }
                                         </td>
-
                                     </tr>
                                 ))
                             }
@@ -125,6 +143,15 @@ const OrdersListComponent = () => {
                                 ):null
                             }
                         </tbody>
+                        <ReactPaginate
+                            pageCount={pageCount} // Total number of pages
+                            pageRangeDisplayed={5} // Number of pages to display in the pagination
+                            marginPagesDisplayed={2} // Number of pages to display before and after the current page
+                            onPageChange={handlePageClick} // Callback function to handle page changes
+                            containerClassName={'pagination'} // CSS class for the pagination container
+                            activeClassName={'active'} 
+                            disabled={true}
+                        />
                 </table>
                 </div>
             </div>
