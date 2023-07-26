@@ -26,6 +26,7 @@ const OrderComponent = () => {
     //state
     const [product_id,setProductId] = useState('')
     const [quantity,setQuantity] = useState()
+    const [productQuantity,setProductQuantity] = useState()
     const [product,setProduct] = useState([])
 
     const [isDisable,setIsDisable] = useState(false)
@@ -47,7 +48,8 @@ const OrderComponent = () => {
         setIsDisable(response.name != null)
         setProduct(response)
         setProductId(productId)
-        alert(`Product price is - ${parseFloat(response.price * 1.2)} `)
+        setProductQuantity(response.quantity)
+        alert(`Product price is - ${parseFloat(response.price * 1.2)}  and  Quantity is - ${response.quantity} `)
     }
 
 
@@ -55,7 +57,13 @@ const OrderComponent = () => {
     const orderProduct = async (e) => {
         e.preventDefault();
         setLoading(true)
-        if(product.name != null && quantity > 0){
+
+        if(quantity > productQuantity){
+            toast.error(`You have limit quantity this product :${productQuantity}`)
+            setLoading(false)
+            return 
+        }
+        else if(product.name != null && quantity > 0){
             console.log('Producut is  is ', product_id)
             setTimeout(async() => {
                 await axios.post('http://127.0.0.1:5000/orders',{
