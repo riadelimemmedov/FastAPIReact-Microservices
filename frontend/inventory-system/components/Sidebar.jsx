@@ -11,7 +11,7 @@ const SidebarComponent = () => {
                 <div className="position-sticky pt-3 sidebar-sticky">    
                     <ul className="nav flex-column">
                         <li className="nav-item">
-                            <a className="nav-link text-black fw-bold h2" aria-current="page" href="#">
+                            <a className="nav-link text-black fw-bold h2" aria-current="page" href="/">
                                 Products
                             </a>
                         </li>
