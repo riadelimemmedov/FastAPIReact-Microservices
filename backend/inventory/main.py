@@ -30,6 +30,8 @@ app.add_middleware(
 )
 
 
+
+#!root
 @app.get("/")
 async def root():
     return {"message": "Inventory"}
