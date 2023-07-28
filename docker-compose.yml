@@ -22,6 +22,17 @@ services:
       - 8002:8000
     #! http://0.0.0.0:8002/
 
+
+  users:
+    container_name: users
+    build: ./backend/users
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - .:/home/riyad/Documents/FastApi-WareHouse-Microservices/users
+    ports:
+      - 8003:8000
+    #! http://0.0.0.0:8003/
+
   inventory-system:
     image: node:alpine
     container_name: inventory-system
