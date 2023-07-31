@@ -15,7 +15,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import OrderComponent from '../routes/Order.jsx'
 import ProductCreateComponent from '../routes/ProductCreate.jsx'
 import OrdersListComponent from '../routes/OrdersList.jsx'
-
+import SignupComponent from '../routes/Signup.jsx'
+import SignInComponent from '../routes/SignIn.jsx'
 
 
 //?Render component to client site dynamically
@@ -26,6 +27,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/create" element={<ProductCreateComponent/>}/>
           <Route path="/order/:order_id" element={<OrderComponent/>}/>
           <Route path="/orders/" element={<OrdersListComponent/>}/>
+          <Route path="/register/" element={<SignupComponent/>}/>
+          <Route path="/login/" element={<SignInComponent/>}/>
         </Routes>
     </BrowserRouter>
 )
