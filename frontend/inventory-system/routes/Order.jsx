@@ -18,8 +18,6 @@ import { toast,Toaster } from 'react-hot-toast';
 import axios from 'axios';
 
 
-
-
 //*OrderComponent
 const OrderComponent = () => {
     
