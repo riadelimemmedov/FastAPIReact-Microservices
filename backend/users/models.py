@@ -4,6 +4,9 @@ from tortoise import fields, models
 from tortoise.contrib.pydantic import pydantic_model_creator
 
 
+#!Helper function
+from utils.helpers import generate_random_user_code
+import uuid
 
 
 #?Users
@@ -14,6 +17,7 @@ class Users(models.Model):
     ]
     
     id = fields.IntField(pk=True)
+    user_hashed_id = fields.CharField(max_length=40,unique=True,null=True,blank=True)
     first_name = fields.CharField(max_length=50)
     last_name  = fields.CharField(max_length=50)
     username = fields.CharField(max_length=50,unique=True,null=True)
@@ -33,10 +37,15 @@ class Users(models.Model):
     def __str__(self):
         return f"{self.first_name}:{self.last_name}"
     
+    
     def full_name(self):
         if self.first_name and self.last_name:
             return f"{self.first_name or ''} {self.last_name or ''}".strip()
         return self.username
+    
+    
+    
+    
 
 #?Pydantic shmecas
 User_Pydantic = pydantic_model_creator(Users,name='User')#exclude=['password']
