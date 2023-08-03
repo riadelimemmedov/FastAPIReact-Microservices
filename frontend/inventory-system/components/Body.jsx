@@ -23,6 +23,7 @@ const BodyComponent = () => {
 
     //getAllProducts
     const getAllProducts = async () => {
+        // axios.defaults.headers.common['Authorization'] = 'Bearer ' + window.localStorage.getItem('token')
         const response = await axios.get('http://127.0.0.1:4000/products')
         setProducts(Object.values(response.data))
         setIsEmpty(Object.values(response.data).length == 0)

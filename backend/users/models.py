@@ -8,6 +8,9 @@ from tortoise.contrib.pydantic import pydantic_model_creator
 from utils.helpers import generate_random_user_code
 import uuid
 
+from datetime import datetime
+
+
 
 #?Users
 class Users(models.Model):
@@ -30,7 +33,7 @@ class Users(models.Model):
     city = fields.CharField(blank=True,max_length=20,null=True)
     state = fields.CharField(blank=True,max_length=20,null=True)
     country = fields.CharField(blank=True,max_length=20,null=True)
-    date_joined = fields.DatetimeField(auto_now_add=True)
+    date_joined = fields.DatetimeField(null=True,auto_now_add=True)
     modified_at = fields.DatetimeField(auto_now=True,null=True)
     
     
@@ -48,7 +51,7 @@ class Users(models.Model):
     
 
 #?Pydantic shmecas
-User_Pydantic = pydantic_model_creator(Users,name='User')#exclude=['password']
+User_Pydantic = pydantic_model_creator(Users,name='User',exclude=['password'])
 UserIn_Pydantic = pydantic_model_creator(Users,name='UserIn',exclude_readonly=True)
 
 

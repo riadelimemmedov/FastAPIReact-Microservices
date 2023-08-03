@@ -66,11 +66,12 @@ const OrderComponent = () => {
             setTimeout(async() => {
                 await axios.post('http://127.0.0.1:5000/orders',{
                     product_id:String(product_id),
+                    customer_id: String(60),
                     quantity:Number(quantity),
-                    "price": 0,
-                    "fee": 0,
-                    "total": 0,
-                    "status": "",
+                    price: 0,
+                    fee: 0,
+                    total: 0,
+                    status: "",
                 })
                 .then((response) => {
                     if(response.data){
@@ -83,6 +84,7 @@ const OrderComponent = () => {
                     }
                 })
                 .catch((err) => {
+                    console.log('Noldu sene  ', err)
                     toast.error('Please try again later')
                 })
             }, 3000);

@@ -87,7 +87,7 @@ const SignupComponent = () => {
                         last_name: formData.last_name,
                     })
                     .then((response) => {
-                        if(response.data.token) window.location.href = '/login'
+                        if(response.data.token) window.location.href = '/login' 
                     })
                     .catch((err) => {
                         setError([])

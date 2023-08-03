@@ -43,9 +43,20 @@ const OrdersListComponent = () => {
 
     //getAllOrders
     const getAllOrders = async() => {
-        const response = await axios.get('http://127.0.0.1:5000/orders')
-        setOrders(Object.values(response.data))
-        setIsEmpty(Object.values(response.data).length == 0)
+        axios.get('http://127.0.0.1:5000/user/order')
+        .then((response) => {
+            setOrders(Object.values(response.data))
+            setIsEmpty(Object.values(response.data).length == 0)
+            console.log('Response value is user order ', response.data)
+        })
+        .catch((err) => {
+            console.log('Not work properyly please try again getAllOrders function ', err)
+        })
+
+
+        // const response = await axios.get('http://127.0.0.1:5000/user/order')
+        // setOrders(Object.values(response.data))
+        // setIsEmpty(Object.values(response.data).length == 0)
     }
 
 

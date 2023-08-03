@@ -1,7 +1,7 @@
 #
 
 #!FastApi
-from fastapi import FastAPI
+from fastapi import FastAPI,Request
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -13,6 +13,9 @@ from redis_om.model import NotFoundError
 
 #!Python modules and methods
 from datetime import datetime
+
+import jwt
+from decouple import config
 
 
 # create your views here,and run server =>  uvicorn main:app --reload
@@ -40,8 +43,13 @@ async def root():
 
 #!get_all_products
 @app.get('/products')
-async def get_all_products():
+async def get_all_products(request:Request):
     """Get All Products"""
+    # user_token = request.headers.get('Authorization').split()[1]
+    
+    # print('Payload is fro product +- ', payload['sub'])
+    # print('Header value is ', user_token)
+
     products = Product.find((Product.slug=='product')).all()
     return products
 

@@ -1,7 +1,7 @@
 #
 
 #!FastApi
-from fastapi import FastAPI
+from fastapi import FastAPI,Header,HTTPException,Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.background import BackgroundTasks
 from starlette.requests import Request
@@ -10,16 +10,20 @@ from starlette.requests import Request
 #!Models and Serializers
 from models import redis,Order
 
+
 #!Redis Orm
 from redis_om.model import NotFoundError
+
 
 #!Python modules and methods
 from datetime import datetime
 import httpx
 import time
-
 import json
 
+
+#!Helpers methods
+from utils.helpers import (check_user_token)
 
 # create your views here,and run server =>  uvicorn main:app --reload
 app = FastAPI()
@@ -72,8 +76,18 @@ async def create_order(body:Order,background_tasks:BackgroundTasks,request:Reque
     """Create a new order"""
     product_data = get_product_data(body.product_id)
     
+    token = request.headers.get('Authorization').split()[1]
+    user_id = await check_user_token(token)
+    
+    
+    print('Token value is create new toerdse r--0-00-d8sa-d0a ', token)
+    
+    
+    print('Porduct data is ', product_data)
+    
     order = Order(
         product_id=body.product_id,
+        customer_id=str(user_id),
         product_name=product_data['name'],
         price=(product_data['price']*body.quantity),
         fee = 0.2 * (product_data['price'] * body.quantity),
@@ -173,3 +187,18 @@ async def delete_all_orders():
     """Delete all orders"""
     Order.find((Order.slug=='order')).delete()
     return {'success': 'Deleted all orders successfully'}
+
+
+
+#!get_user_order
+@app.get('/user/order')
+async def get_user_order(request:Request):
+    try:
+        token = request.headers.get('Authorization').split()[1]
+        user_id = await check_user_token(token)
+        orders = Order.find((Order.customer_id==str(user_id))).all()
+        return orders
+    except NotFoundError:
+        return {'error': 'Order not found'},404
+    
+    

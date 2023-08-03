@@ -13,8 +13,6 @@ import { Toaster } from 'react-hot-toast';
 
 
 
-
-
 //*Header
 const HeaderComponent = () => {
 
@@ -30,7 +28,14 @@ const HeaderComponent = () => {
         if(window.localStorage.getItem('token')){
             setUserToken({token:window.localStorage.getItem('token')})
             setIsAuthenticated(true)
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + userToken.token
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + window.localStorage.getItem('token')
+            axios.get('http://127.0.0.1:5000/user/order')
+                .then((response) => {
+                    console.log('Response value is user order ', response.data)
+                })
+                .catch((err) => {
+                    console.log('Not work properyly please try again ', err)
+                })
         }
         else{
             setUserToken({token:''})
@@ -40,13 +45,14 @@ const HeaderComponent = () => {
     }   
 
 
+
     //logoutUser
     const logoutUser = (event) => {
         axios.defaults.headers.common['Authorization'] = ''
         window.localStorage.removeItem('token')
         setUserToken({token:''})
         setIsAuthenticated(false)
-        window.location.href = `${window.location.href}login`
+        history.replace('/login')
     }
 
 

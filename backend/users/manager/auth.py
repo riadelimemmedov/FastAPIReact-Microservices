@@ -46,9 +46,11 @@ class CustomHTTPBearer(HTTPBearer):
     ) -> Optional[HTTPAuthorizationCredentials]:
         response = await super().__call__(request)
         try:
+            print('Response crendtialis is ', response.credentials)
             payload = jwt.decode(
                 response.credentials, config("SECRET_KEY"), algorithms=["HS256"]
             )
+            print('Payload is ', payload['sub'])
             user_data = await Users.filter(id = payload["sub"])
             request.state.user = user_data
         except jwt.ExpiredSignatureError:
