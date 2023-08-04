@@ -130,6 +130,8 @@ async def register(user_data:UserRegisterIn):
     token = await UserManager.register(user_data)
     return {'token':token}
 
+
+
 #!login
 @app.post('/login/',status_code=201)
 async def login(user_data:UserLoginIn):
@@ -139,8 +141,9 @@ async def login(user_data:UserLoginIn):
     return {'token':token,'user':user}
 
 
-
+#!check_user_token
 @app.post('/user/check')
 async def check_user_token(token:dict):
     payload = jwt.decode(token['token'], config("SECRET_KEY"), algorithms=["HS256"])
-    return payload['sub']
+    user = await User_Pydantic.from_queryset_single(Users.get(id=payload['sub']))
+    return user

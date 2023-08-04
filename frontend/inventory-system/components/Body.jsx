@@ -19,6 +19,9 @@ const BodyComponent = () => {
     //state
     const [products, setProducts] = useState([])
     const [isEmpty, setIsEmpty] = useState(false)
+    const [isAuthenticated,setIsAuthenticated] = useState(false)
+    const [userRole,setUserRole] = useState()
+    
 
 
     //getAllProducts
@@ -39,10 +42,32 @@ const BodyComponent = () => {
         }
     }
 
+
+
+    //hanleAuthentication
+    const handleCurrentUser = (event) => {
+        if(window.localStorage.getItem('token')){
+            setIsAuthenticated(true)
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + window.localStorage.getItem('token')
+            axios.get('http://127.0.0.1:5000/user/order')
+                .then((response) => {
+                    setUserRole(response.data.user.user_role)
+                })
+                .catch((err) => {
+                    console.log('Not work properyly please try again handleCurrentUser ', err)
+                })
+        }
+        else{
+            setIsAuthenticated(false)
+            axios.defaults.headers.common['Authorization'] = ''
+        }
+    }   
+
     
     //useEffect
     useEffect(() => {
-        getAllProducts();
+        getAllProducts(),
+        handleCurrentUser()
     },[])
 
 
@@ -52,8 +77,28 @@ const BodyComponent = () => {
         <>  
             <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
                 <div className="pt-3 pb-2 mb-3 border-bottom">
-                    <Link to={'/create'} className="btn btn-warning btn-sm fw-bold border-2">Add Product</Link> &nbsp;
-                    <Link to={'/orders'} className="btn btn-secondary btn-sm fw-bold border-2">Orders</Link> &nbsp;
+
+                {
+                    userRole === 'USER' && isAuthenticated ? (
+                        <div>
+                            <Link to={'/orders'} className="btn btn-secondary btn-sm fw-bold border-2">Orders</Link> &nbsp;
+                        </div>
+                    ) : userRole === 'ADMIN' && isAuthenticated ? (
+                        <div>
+                            <Link to={'/orders'} className="btn btn-secondary btn-sm fw-bold border-2">Orders</Link> &nbsp;
+                            <Link to={'/create'} className="btn btn-warning btn-sm fw-bold border-2">Add Product</Link> &nbsp;
+                        </div>
+                    ) : isAuthenticated == false ? (
+                        <div className='alert alert-danger'>
+                            Please login or register in site : &nbsp; <Link className="fw-bold" to={'/login'} style={{textDecoration:'none'}}>Login</Link>
+                        </div>
+                    ):
+                    (
+                        <p></p>
+                    )
+                }
+
+
                 </div>
                 <hr/>
                 <div className="table-responsive">
@@ -78,14 +123,31 @@ const BodyComponent = () => {
                                         <td>{parseFloat(product.price * 1.2)}</td>
                                         <td>{product.quantity}</td>
                                         <td>{product.created_date}</td>
-                                        <td>
-                                            <a href="#" className="btn btn-danger btn-sm" onClick={(e) => deleteProduct(product.pk)}>
-                                                Delete
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <Link to={`/order/${product.pk}`} className="btn btn-primary btn-sm fw-bold border-2">Order</Link>
-                                        </td>
+
+                                        {
+                                            userRole == 'ADMIN' && isAuthenticated  ? (
+                                                <td>
+                                                    <a href="#" className="btn btn-danger btn-sm" onClick={(e) => deleteProduct(product.pk)}>
+                                                        Delete
+                                                    </a>
+                                                </td>
+                                            )
+                                            :(
+                                                <td className='text-danger fw-bold'>Not Allowed</td>
+                                            )
+                                        }
+
+                                        {
+                                            isAuthenticated ? (
+                                                <td>
+                                                    <Link to={`/order/${product.pk}`} className="btn btn-primary btn-sm fw-bold border-2">Order</Link>
+                                                </td>
+                                            )
+                                            : (
+                                                <td className='text-secondary fw-bold'>You need to login</td>
+                                            )
+                                        }
+
                                     </tr>
                                 ))
                         }

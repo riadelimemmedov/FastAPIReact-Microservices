@@ -111,9 +111,17 @@ const SignInComponent = () => {
     }
 
 
+
+    //isLoggedIn
+    const isLoggedIn = () => {
+        const token = window.localStorage.getItem('token') != null ? window.location.href = '/' : null
+    }
+
+
     //useEffect
     useEffect(() => {
-        handleDomEvent()
+        handleDomEvent(),
+        isLoggedIn()
     },[])
 
 

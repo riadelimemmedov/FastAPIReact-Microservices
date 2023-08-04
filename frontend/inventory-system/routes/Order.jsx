@@ -66,7 +66,7 @@ const OrderComponent = () => {
             setTimeout(async() => {
                 await axios.post('http://127.0.0.1:5000/orders',{
                     product_id:String(product_id),
-                    customer_id: String(60),
+                    customer_id: String(55),
                     quantity:Number(quantity),
                     price: 0,
                     fee: 0,

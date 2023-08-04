@@ -77,7 +77,7 @@ async def create_order(body:Order,background_tasks:BackgroundTasks,request:Reque
     product_data = get_product_data(body.product_id)
     
     token = request.headers.get('Authorization').split()[1]
-    user_id = await check_user_token(token)
+    user = await check_user_token(token)
     
     
     print('Token value is create new toerdse r--0-00-d8sa-d0a ', token)
@@ -87,7 +87,7 @@ async def create_order(body:Order,background_tasks:BackgroundTasks,request:Reque
     
     order = Order(
         product_id=body.product_id,
-        customer_id=str(user_id),
+        customer_id=str(user['id']),
         product_name=product_data['name'],
         price=(product_data['price']*body.quantity),
         fee = 0.2 * (product_data['price'] * body.quantity),
@@ -195,9 +195,9 @@ async def delete_all_orders():
 async def get_user_order(request:Request):
     try:
         token = request.headers.get('Authorization').split()[1]
-        user_id = await check_user_token(token)
-        orders = Order.find((Order.customer_id==str(user_id))).all()
-        return orders
+        user = await check_user_token(token)        
+        orders = Order.find((Order.customer_id==str(user['id']))).all()
+        return {'orders': orders,'user': user}
     except NotFoundError:
         return {'error': 'Order not found'},404
     
