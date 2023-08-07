@@ -30,7 +30,7 @@ app = FastAPI()
 
 
 # Create FastApi object from FastAPI class
-app = FastAPI()
+app = FastAPI(title="Payment")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=['*'],
