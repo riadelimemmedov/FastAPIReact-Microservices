@@ -70,6 +70,9 @@ const OrdersListComponent = () => {
             await axios.patch(`http://127.0.0.1:5000/orders/cancel/${order_id}`)
                 .then((response) => {
                     toast.success('Selected order cancelled successfully')
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 2000);
                 })
                 .catch((err) => {
                     toast.error('Please try again,occur some problem when cancel order.')

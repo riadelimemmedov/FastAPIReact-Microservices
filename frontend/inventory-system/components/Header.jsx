@@ -38,7 +38,7 @@ const HeaderComponent = () => {
                 .then((response) => {
                     setFirstName(response.data.user.first_name)
                     setLastName(response.data.user.last_name)
-
+                    window.localStorage.setItem("user_email",response.data.user.email)
                 })
                 .catch((err) => {
                     console.log('Not work properyly please try again ', err)

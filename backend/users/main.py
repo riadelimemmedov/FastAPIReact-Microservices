@@ -44,7 +44,7 @@ from decouple import config
 
 
 # Create FastApi object from FastAPI class
-app = FastAPI()
+app = FastAPI(title="User")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

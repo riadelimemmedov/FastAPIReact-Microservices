@@ -51,10 +51,25 @@ const OrderComponent = () => {
     }
 
 
+
+    const sendOrderNotification = async (user_email) => {
+        await axios.post('http://127.0.0.1:7000/send-email/background',{
+            "email": [
+                `${user_email}`
+            ],
+            "body": {
+                "title": "Order Receiving!",
+                "subject": "We have received you order.Thank you very much for select our company"
+            }
+        })
+    }
+
     //orderProduct
     const orderProduct = async (e) => {
         e.preventDefault();
         setLoading(true)
+
+        console.log('Orders user email ', window.localStorage.getItem('user_email'))
 
         if(quantity > productQuantity){
             toast.error(`You have limit quantity this product :${productQuantity}`)
@@ -78,7 +93,8 @@ const OrderComponent = () => {
                         toast.success('We are accepting your order.Thanks for you selected our company.')
                         setQuantity('')
                         setLoading(false)
-                        setTimeout(() => {
+                        setTimeout(async() => {
+                            await sendOrderNotification(window.localStorage.getItem('user_email'))
                             window.location.href = '/'
                         }, 3000);
                     }
