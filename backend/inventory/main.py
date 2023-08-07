@@ -19,11 +19,11 @@ from decouple import config
 
 
 # create your views here,and run server =>  uvicorn main:app --reload
-app = FastAPI()
+# app = FastAPI()
 
 
 # Create FastApi object from FastAPI class
-app = FastAPI()
+app = FastAPI(title="Inventory")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=['*'],
