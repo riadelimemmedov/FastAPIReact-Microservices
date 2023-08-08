@@ -21,6 +21,9 @@ const BodyComponent = () => {
     const [isEmpty, setIsEmpty] = useState(false)
     const [isAuthenticated,setIsAuthenticated] = useState(false)
     const [userRole,setUserRole] = useState()
+    const [userHashedId,setuserHashedId] = useState()
+    const [isAddedCart,setIsAddedCart] = useState(false)
+
     
 
 
@@ -52,6 +55,7 @@ const BodyComponent = () => {
             axios.get('http://127.0.0.1:5000/user/order')
                 .then((response) => {
                     setUserRole(response.data.user.user_role)
+                    setuserHashedId(response.data.user.user_hashed_id)
                 })
                 .catch((err) => {
                     console.log('Not work properyly please try again handleCurrentUser ', err)
@@ -63,6 +67,23 @@ const BodyComponent = () => {
         }
     }   
 
+
+    const addToCart = (e) => {
+        e.preventDefault()
+        if(userHashedId){
+            setTimeout(() => {
+                axios.post(`http://127.0.0.1:9000/add_to_cache/?user_hashed_id=${userHashedId}`)
+                .then((response) => {
+                    toast.success('Added to cart successfully')
+                    console.log('Added to cart ', response.data)
+                })
+                .catch((err) => {
+                    console.log('Buneidd ', err)
+                    toast.error('Please try again ')
+                })
+            }, 3000);
+        }
+    }
     
     //useEffect
     useEffect(() => {
@@ -112,6 +133,7 @@ const BodyComponent = () => {
                                 <th scope="col">Created Date</th>
                                 <th scope="col">Delete Product</th>
                                 <th scope="col">Order Product</th>
+                                <th scope="col">Add To Cart</th>
                             </tr>
                         </thead>
                         <tbody> 
@@ -147,7 +169,11 @@ const BodyComponent = () => {
                                                 <td className='text-secondary fw-bold'>You need to login</td>
                                             )
                                         }
-
+                                        <td>
+                                            <button className="btn btn-secondary btn-sm fw-bold border-2" onClick={addToCart}>
+                                                Add to cart
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))
                         }

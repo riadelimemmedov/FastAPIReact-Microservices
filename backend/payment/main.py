@@ -20,13 +20,14 @@ from datetime import datetime
 import httpx
 import time
 import json
+from datetime import datetime,timedelta
+
+
+from models import redis
 
 
 #!Helpers methods
 from utils.helpers import (check_user_token)
-
-# create your views here,and run server =>  uvicorn main:app --reload
-app = FastAPI()
 
 
 # Create FastApi object from FastAPI class
@@ -54,6 +55,7 @@ async def root():
 async def get_all_orders():
     """Get All Orders"""
     orders = Order.find((Order.slug=='order')).all()
+
     return orders
 
 
@@ -201,4 +203,8 @@ async def get_user_order(request:Request):
     except NotFoundError:
         return {'error': 'Order not found'},404
     
-    
+
+
+# import redis
+# redis_client = redis.Redis(host='localhost', port=6379, db=0)
+

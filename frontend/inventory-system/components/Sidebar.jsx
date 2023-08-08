@@ -7,7 +7,7 @@ import { useState,useEffect } from 'react'
 const SidebarComponent = () => {
     return(
         <>  
-            <nav id="sidebarMenu" className="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <nav id="sidebarMenu" className="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse mt-5">
                 <div className="position-sticky pt-3 sidebar-sticky">    
                     <ul className="nav flex-column">
                         <li className="nav-item">
