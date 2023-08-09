@@ -24,7 +24,6 @@ const BodyComponent = () => {
     const [userHashedId,setuserHashedId] = useState()
     const [isAddedCart,setIsAddedCart] = useState(false)
 
-    
 
 
     //getAllProducts
@@ -68,6 +67,7 @@ const BodyComponent = () => {
     }   
 
 
+    //addToCart
     const addToCart = (e) => {
         e.preventDefault()
         if(userHashedId){
@@ -75,15 +75,15 @@ const BodyComponent = () => {
                 axios.post(`http://127.0.0.1:9000/add_to_cache/?user_hashed_id=${userHashedId}`)
                 .then((response) => {
                     toast.success('Added to cart successfully')
-                    console.log('Added to cart ', response.data)
+                    window.location.reload()
                 })
                 .catch((err) => {
-                    console.log('Buneidd ', err)
                     toast.error('Please try again ')
                 })
-            }, 3000);
+            }, 1000);
         }
     }
+
     
     //useEffect
     useEffect(() => {
@@ -145,7 +145,7 @@ const BodyComponent = () => {
                                         <td>{parseFloat(product.price * 1.2)}</td>
                                         <td>{product.quantity}</td>
                                         <td>{product.created_date}</td>
-
+                                        
                                         {
                                             userRole == 'ADMIN' && isAuthenticated  ? (
                                                 <td>
