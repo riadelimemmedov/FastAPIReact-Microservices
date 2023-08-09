@@ -4,7 +4,6 @@ from fastapi import FastAPI,Header,HTTPException,Request
 from fastapi.middleware.cors import CORSMiddleware
 
 
-
 #!Python modules and functions
 from datetime import datetime,timedelta
 
@@ -31,7 +30,7 @@ app.add_middleware(
 #*root
 @app.get("/")
 async def root():
-    return {"message": "Hello world"}
+    return {"message": "Hello add to cart"}
 
 
 
@@ -40,11 +39,11 @@ async def root():
 def add_to_cache(user_hashed_id:str):
     user_data = redis.get(user_hashed_id)
     if user_data is None:
-        redis.set(user_hashed_id,1,ex=timedelta(seconds=240))
+        redis.set(user_hashed_id,1,ex=timedelta(days=30))
     elif user_data is not None:
         user = int(user_data)
         user += 1
-        redis.set(user_hashed_id,user,ex=timedelta(seconds=240))
+        redis.set(user_hashed_id,user,ex=timedelta(days=30))
     return {"message": "Value added to cache"}
 
 
