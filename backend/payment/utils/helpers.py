@@ -15,5 +15,4 @@ async def check_user_token(token:str):
         response.raise_for_status()
         return True
     except httpx.HTTPError as http_err:
-        print('When send user token for check,occur error ', http_err)
         return False
