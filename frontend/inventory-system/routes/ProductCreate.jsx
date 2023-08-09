@@ -21,7 +21,6 @@ import axios from 'axios';
 //*BodyComponent
 const ProductCreateComponent = () => {
 
-
     //state
     const [name, setName] = useState();
     const [price, setPrice] = useState();
