@@ -13,7 +13,6 @@ from redis_om.model import NotFoundError
 
 #!Python modules and methods
 from datetime import datetime
-
 import jwt
 from decouple import config
 
@@ -45,11 +44,6 @@ async def root():
 @app.get('/products')
 async def get_all_products(request:Request):
     """Get All Products"""
-    # user_token = request.headers.get('Authorization').split()[1]
-    
-    # print('Payload is fro product +- ', payload['sub'])
-    # print('Header value is ', user_token)
-
     products = Product.find((Product.slug=='product')).all()
     return products
 
