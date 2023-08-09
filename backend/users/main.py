@@ -26,20 +26,14 @@ from pydantic import BaseModel
 
 #!Python modules and functions
 from typing import List
+import jwt
+from decouple import config
 
 
 #!Models,Serializers,Schemas and Manager class
 from manager.user import UserManager
 from manager.auth import oauth2_schema
 from schemas.request.user import UserRegisterIn, UserLoginIn
-
-
-import jwt
-from decouple import config
-
-
-# user_pydantic = pydantic_model_creator(Users,exclude=['created_at','modified_at'])
-# user_pydantic_no_id = pydantic_model_creator(Users,exclude_readonly=True,exclude=['created_at','modified_at','id'])
 
 
 
@@ -76,7 +70,6 @@ async def get_all_users():
 async def create_user(user:UserIn_Pydantic):
     """Create user"""
     user = await Users.create(**user.dict(exclude_unset=True))
-    print('User is ', user)
     if not user:
         raise HTTPException(status_code=422,detail=f"Could not create user,please try again")
     return await User_Pydantic.from_tortoise_orm(user)
@@ -126,7 +119,6 @@ async def delete_all_user():
 #!register
 @app.post('/register/',status_code=201)
 async def register(user_data:UserRegisterIn):
-    print('User data is +++ ', user_data)
     token = await UserManager.register(user_data)
     return {'token':token}
 
@@ -136,7 +128,6 @@ async def register(user_data:UserRegisterIn):
 @app.post('/login/',status_code=201)
 async def login(user_data:UserLoginIn):
     token = await UserManager.login(user_data)
-    # user = await Users.get(email=user_data.email)
     user = await User_Pydantic.from_queryset_single(Users.get(email=user_data.email))
     return {'token':token,'user':user}
 
