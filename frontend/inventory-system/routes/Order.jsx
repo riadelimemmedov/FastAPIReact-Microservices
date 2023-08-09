@@ -31,6 +31,7 @@ const OrderComponent = () => {
     const [loading,setLoading] = useState(false)
 
 
+
     //getProductId
     const getProductId = () => {
         const product_id = window.location.href.split('/').pop()
@@ -40,7 +41,6 @@ const OrderComponent = () => {
 
     //getProductDetail
     const getProductDetail = async() => {  
-        // console.log('Product data response is this value ', response)
         const productId = getProductId()
         const response = (await axios.get(`http://127.0.0.1:4000/products/${productId}`)).data
         setIsDisable(response.name != null)
@@ -52,6 +52,7 @@ const OrderComponent = () => {
 
 
 
+    //sendOrderNotification
     const sendOrderNotification = async (user_email) => {
         await axios.post('http://127.0.0.1:7000/send-email/background',{
             "email": [
@@ -63,13 +64,13 @@ const OrderComponent = () => {
             }
         })
     }
+    
 
     //orderProduct
     const orderProduct = async (e) => {
         e.preventDefault();
         setLoading(true)
 
-        console.log('Orders user email ', window.localStorage.getItem('user_email'))
 
         if(quantity > productQuantity){
             toast.error(`You have limit quantity this product :${productQuantity}`)
@@ -77,7 +78,6 @@ const OrderComponent = () => {
             return 
         }
         else if(product.name != null && quantity > 0){
-            console.log('Producut is  is ', product_id)
             setTimeout(async() => {
                 await axios.post('http://127.0.0.1:5000/orders',{
                     product_id:String(product_id),
@@ -100,7 +100,6 @@ const OrderComponent = () => {
                     }
                 })
                 .catch((err) => {
-                    console.log('Noldu sene  ', err)
                     toast.error('Please try again later')
                 })
             }, 3000);
