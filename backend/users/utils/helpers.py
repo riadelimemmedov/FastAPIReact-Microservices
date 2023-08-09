@@ -27,5 +27,4 @@ def generate_random_string(length):
 #?generate_random_user_code
 def generate_random_user_code(length=12):
     code = generate_random_string(length)
-    print('Your generaet code is ', code)
     return code
