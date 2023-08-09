@@ -39,13 +39,3 @@ def getPaymentDetail():
             print('Error when refunded order ', str(err))
         time.sleep(1)
 getPaymentDetail()
-    
-    
-    
-    #     if order.status == 'pending':
-    #         print('Pending order...............')
-    #     order.status = 'completed'
-    #     order.save()
-    # elif order.status == 'refunded':
-    #     pass
-    
