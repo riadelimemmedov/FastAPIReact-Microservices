@@ -13,6 +13,8 @@ from models import redis,Order
 
 #!Redis Orm
 from redis_om.model import NotFoundError
+from models import redis
+
 
 
 #!Python modules and methods
@@ -22,8 +24,6 @@ import time
 import json
 from datetime import datetime,timedelta
 
-
-from models import redis
 
 
 #!Helpers methods
@@ -81,12 +81,7 @@ async def create_order(body:Order,background_tasks:BackgroundTasks,request:Reque
     token = request.headers.get('Authorization').split()[1]
     user = await check_user_token(token)
     
-    
-    print('Token value is create new toerdse r--0-00-d8sa-d0a ', token)
-    
-    
-    print('Porduct data is ', product_data)
-    
+        
     order = Order(
         product_id=body.product_id,
         customer_id=str(user['id']),
@@ -97,7 +92,6 @@ async def create_order(body:Order,background_tasks:BackgroundTasks,request:Reque
         quantity = body.quantity,
         status = 'pending'
     )
-    print('Order type is ', type(order))
     if(order.pk):
         order.save()
         background_tasks.add_task(order_completed,order.pk)
@@ -127,12 +121,9 @@ def update_product_data(product_id,product_data):
     try:
         with httpx.Client() as client:
             response = client.patch(url,json=product_data)
-            # print('Response is ', response)
-        #Raise an exception for non-2xx status codes
         response.raise_for_status()
         return True
     except httpx.HTTPError as http_err:
-        print('When update product quantity failed ', http_err)
         return False
     
 
@@ -144,7 +135,6 @@ def get_product_data(product_id):
             response = client.get(url).json()
         return response
     except httpx.HTTPError as http_err:
-        print('When send get request to specific url return error ', http_err)
         return {http_err}
     
 
@@ -152,8 +142,6 @@ def get_product_data(product_id):
 def order_completed(order_id:str):
     time.sleep(180)
     order = Order.get(pk=order_id)
-    print('Order here broo... ', order)
-    print('Order status here  ', order.status)
     if order.status == 'refunded':
         print('Your order has been --- REFUNDED ---')        
     elif order.status == 'pending':
@@ -165,22 +153,6 @@ def order_completed(order_id:str):
         deleted_fields = updated_order.pop('created_date')
         redis.xadd("order_completed",updated_order,'*')
     
-
-
-# #?order_refunded
-# def order_refunded(pending_order:Order):
-#     pending_order.status='refunded'
-#     pending_order.save()
-
-    
-#     order = pending_order.dict()
-#     deleted_fields = order.pop('created_date')
-    
-    
-#     print('Deleted field is ', deleted_fields)
-#     print('Updated dict is ', order)
-#     redis.xadd('refund_order',order,'*')
-
 
 
 #!delete_all_orders          
@@ -203,8 +175,3 @@ async def get_user_order(request:Request):
     except NotFoundError:
         return {'error': 'Order not found'},404
     
-
-
-# import redis
-# redis_client = redis.Redis(host='localhost', port=6379, db=0)
-
