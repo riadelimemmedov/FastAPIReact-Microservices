@@ -25,39 +25,33 @@ import '../style/Pagination.css'
 
 //*OrdersListComponent
 const OrdersListComponent = () => {
+
     //state
     const [orders,setOrders] = useState([])
     const [isEmpty,setIsEmpty] = useState(false)
     const [loading,setLoading] = useState(false)
-
     const [currentPage, setCurrentPage] = useState(0);
-
-
     const [itemOffset, setItemOffset] = useState(0);
 
+
+    //pagination
     let itemsPerPage = 10
     const endOffset = itemOffset + itemsPerPage;
     const currentItems = orders.slice(itemOffset, endOffset)
     const pageCount = Math.ceil(orders.length / itemsPerPage);
 
 
+
     //getAllOrders
     const getAllOrders = async() => {
         axios.get('http://127.0.0.1:5000/user/order')
         .then((response) => {
-            console.log('Response come from  orderlist neyse ', response.data.orders)
             setOrders(Object.values(response.data.orders))
             setIsEmpty(Object.values(response.data.orders).length == 0)
-            console.log('Response value is user order ', response.data.orders)
         })
         .catch((err) => {
-            console.log('Not work properyly please try again getAllOrders function ', err)
+            toast.error('Please try again later')
         })
-
-
-        // const response = await axios.get('http://127.0.0.1:5000/user/order')
-        // setOrders(Object.values(response.data))
-        // setIsEmpty(Object.values(response.data).length == 0)
     }
 
 
@@ -78,18 +72,16 @@ const OrdersListComponent = () => {
                     toast.error('Please try again,occur some problem when cancel order.')
                 })
         }
-        //http://127.0.0.1:5000/orders/cancel/01H66CVAZPRF1DCDDXXXVHD0SH
-        console.log('Handled event cancel order event')
     }
 
 
     // Invoke when user click to request another page.
     const handlePageClick = (event) => {
         const newOffset = (event.selected * itemsPerPage) % orders.length;
-        console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
         setItemOffset(newOffset);
     };
 
+    
     //useEffect
     useEffect(() => {
         getAllOrders()
@@ -159,11 +151,11 @@ const OrdersListComponent = () => {
                             }
                         </tbody>
                         <ReactPaginate
-                            pageCount={pageCount} // Total number of pages
-                            pageRangeDisplayed={5} // Number of pages to display in the pagination
-                            marginPagesDisplayed={2} // Number of pages to display before and after the current page
-                            onPageChange={handlePageClick} // Callback function to handle page changes
-                            containerClassName={'pagination'} // CSS class for the pagination container
+                            pageCount={pageCount} 
+                            pageRangeDisplayed={5} 
+                            marginPagesDisplayed={2} 
+                            onPageChange={handlePageClick} 
+                            containerClassName={'pagination'} 
                             activeClassName={'active'} 
                             disabled={true}
                         />
