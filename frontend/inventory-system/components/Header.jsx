@@ -27,22 +27,22 @@ const HeaderComponent = () => {
     
     const [firstName,setFirstName] = useState()
     const [lastName,setLastName] = useState()
-    const [userHashedId,setuserHashedId] = useState()
+    const [cartItemCount,setcartItemCount] = useState()
 
 
 
     //hanleAuthentication
-    const hanleAuthentication = (event) => {
+    const hanleAuthentication = async (event) => {
         if(window.localStorage.getItem('token')){
             setUserToken({token:window.localStorage.getItem('token')})
             setIsAuthenticated(true)
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + window.localStorage.getItem('token')
-            axios.get('http://127.0.0.1:5000/user/order')
+            await axios.get('http://127.0.0.1:5000/user/order')
                 .then((response) => {
                     setFirstName(response.data.user.first_name)
                     setLastName(response.data.user.last_name)
-                    setuserHashedId(response.data.user.user_hashed_id)
                     window.localStorage.setItem("user_email",response.data.user.email)
+                    window.localStorage.setItem('user_hashed_id',response.data.user.user_hashed_id)
                 })
                 .catch((err) => {
                     console.log('Not work properyly please try again ', err)
@@ -68,17 +68,19 @@ const HeaderComponent = () => {
 
 
 
+    //getFromCart
     const getFromCart = (e) => {
+        let userHashedId = window.localStorage.getItem('user_hashed_id')
         if(userHashedId){
             setTimeout(async() => {
                 await axios.post(`http://127.0.0.1:9000/get_from_cache/?user_hashed_id=${userHashedId}`)
                 .then((response) => {
-                    console.log('Card value is ', response.data)
+                    setcartItemCount(Number(response.data.cart_item_count))
                 })
                 .catch((err) => {
-                    console.log('Bunedi ala ', err)
+                    console.log('Error when get cache data from backend ', err)
                 })
-            }, 500);
+            }, 0);
         }
     }
     
@@ -87,6 +89,7 @@ const HeaderComponent = () => {
     //useEffect
     useEffect(() => {
         hanleAuthentication()
+        getFromCart()
     },[])
 
 
@@ -123,7 +126,7 @@ const HeaderComponent = () => {
                                 <AddShoppingCartIcon />
                                 <>
                                     <span className="position-absolute top-0 start-100 translate-middle bg-danger border border-light rounded-circle" style={{padding:'8px',fontSize:'12px'}}>    
-                                        23
+                                        {cartItemCount > 0 ?  cartItemCount  : 0}
                                     <span className="visually-hidden"></span>
                                     </span>
                                 </>
@@ -134,6 +137,9 @@ const HeaderComponent = () => {
         </>
     )
 }
+
 export default HeaderComponent
+
+
 
 
