@@ -13,7 +13,6 @@ from decouple import config
 
 
 
-
 #?Configuration FastApi-Email
 conf = ConnectionConfig(
     MAIL_USERNAME = config("MAIL_USERNAME"),
