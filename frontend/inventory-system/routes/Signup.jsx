@@ -46,11 +46,9 @@ const SignupComponent = () => {
     const [isActive,setIsActive] = useState(false)
     const [errors,setError] = useState([])
 
-    
 
     //classes
     const classes = useStyles();
-
 
 
     //checkFormData
