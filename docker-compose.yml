@@ -11,6 +11,7 @@ services:
     ports:
       - 8001:8000
     #! http://0.0.0.0:8001/
+
     
   payment:
     container_name: payment
@@ -33,6 +34,29 @@ services:
       - 8003:8000
     #! http://0.0.0.0:8003/
 
+
+  send-email:
+    container_name: send-email
+    build: ./backend/send-email
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - .:/home/riyad/Documents/FastApi-WareHouse-Microservices/send-email
+    ports:
+      - 8004:8000
+    #! http://0.0.0.0:8004/
+
+
+  add-cart:
+    container_name: add-cart
+    build: ./backend/add-cart
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - .:/home/riyad/Documents/FastApi-WareHouse-Microservices/add-cart
+    ports:
+      - 8005:8000
+    #! http://0.0.0.0:8005/
+
+
   inventory-system:
     image: node:alpine
     container_name: inventory-system
@@ -45,4 +69,4 @@ services:
         source: ./
         target: /inventory-system
     tty: true
-    #! http://localhost:8004/
+    #! http://localhost:8006/
