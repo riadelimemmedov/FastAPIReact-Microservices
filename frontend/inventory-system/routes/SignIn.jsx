@@ -29,8 +29,6 @@ import useStyles from '../style/style.js'
 import '../style/Pagination.css'
 
 
-import { redirect } from "react-router-dom";
-
 
 //*SignInComponent
 const SignInComponent = () => {
@@ -71,7 +69,6 @@ const SignInComponent = () => {
                 await axios.post('http://127.0.0.1:2000/login/',{email:formData.email,password:formData.password})
                     .then((response) => {
                         setUserToken({token:response.data.token})
-                        console.log('User credentials is ', response.data.user)
                         axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token
                         window.localStorage.setItem('token',response.data.token)
                         window.location.href = '/'
